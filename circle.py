@@ -1,5 +1,5 @@
 import pygame
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH, PLAYER_SHOOT_SPEED
 
 # Base class for game objects
 class CircleShape(pygame.sprite.Sprite):
@@ -32,9 +32,15 @@ class CircleShape(pygame.sprite.Sprite):
              self.move(dt)
         if keys[pygame.K_s]:
              self.move(-dt)
+        if self.shoot_timer > 0:
+            self.shoot_timer -= dt  # Gradually reduce the timer
     
     def collide(self, other):
         distance = self.position.distance_to(other.position)
         if distance <= (self.radius + other.radius):
             return True
         return False
+    
+    def collides_with(self, other):
+        return self.position.distance_to(other.position) <= self.radius + other.radius
+
